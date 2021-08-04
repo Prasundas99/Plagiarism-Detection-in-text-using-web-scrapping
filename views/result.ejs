@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Plagiarism Detector</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="/images/m2.png" type="image/x-icon">
+	<style type="text/css">
+
+		.alert-danger { color: #721c24 }
+		a { text-decoration: none; }
+		div a:hover { text-decoration: none; }
+
+		#pageContent {
+			display: none;
+			min-height: 100vh;
+		}
+		#footer {
+			z-index: 5;
+			position: fixed;
+			bottom: 0;
+			left: 0; right: 0;
+			background-color: #fff;
+		}
+		#loader{
+			display: flex; align-items: center; justify-content: center;
+			position: fixed; top: 0; left: 0; z-index: 999;
+			background: rgba(0,0,0, 0.9);
+			width: 100vw; height: 100vh;
+			overflow: hidden;
+		}
+		#loaderCircle {
+			width: 80px; height: 80px;
+			box-sizing: border-box;
+			border: 10px solid #f3f3f3; border-radius: 50%; border-top: 10px solid rgb(254,0,0); border-left: 10px solid rgb(254,0,0); ;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		@keyframes animatebottom { 
+			from{ bottom:-20vh; opacity:0 } 
+			to{ bottom:0; opacity:1 }
+		}
+
+		.animate-bottom {
+			position: relative;
+			-webkit-animation-name: animatebottom;
+			-webkit-animation-duration: 0.6s;
+			animation-name: animatebottom;
+			animation-duration: 0.6s
+		}
+		
+	</style>
+
+	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+
+</head>
+<body onload="stopLoader()">
+
+	<!-- Add loader animation -->
+	<div id="loader">
+		<div id="loaderCircle"></div>
+	</div>
+
+	<section id="pageContent" class="animate-bottom">
+		<div class="container py-5">
+			<h1 class="text-center mb-3">Plagiarism Report</h1>
+			<hr>
+			<h5 class="text-center mb-4">Note: Sentences highlighted in red are plagiarised. Clicking on them will open the source.</h5>
+
+			<!-- loop over all cases and render them -->
+			<% if (result && count) { %>
+
+				<div class="card text-center mb-4">
+					<div class="card-body text-danger">
+						<b> Found <%= count.plagiarised %> out of <%= count.total %> sentences plagiarised! </b>
+					</div>
+				</div>
+
+				<%  result.forEach((r, i)=> {  %>
+
+					<% if (r.url) { %>
+						<a href="<%= r.url %>" target="_blank" data-toggle="tooltip" data-placement="top" title="Click to visit the source">
+							<div class="alert alert-danger mb-1"><b><%= i+1 %>.</b> <%= r.text %> </div>
+						</a>
+					<%} else { %>
+						<div class="alert alert-success mb-1" data-toggle="tooltip" data-placement="top" title="Unique">
+							<b><%= i+1 %>.</b> <%= r.text %>
+						</div>
+					<% } %>
+
+				<%  })  %>
+
+			<% } %>
+
+			<a href="/"><button class="btn btn-primary mt-4 mb-4" onclick="startLoader()">Go to home</button></a>
+
+			<div class="card mb-5">
+				<div class="card-body text-center">
+					<b>This tool showing a sentence as plagiarised doesn't necessarily mean that it actually is.</b><br>
+					<b>Maybe it is a coincidence that both the authors wrote the exact same sentence</b>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+<script src="/css/bootstrap/jquery.min.js"></script>
+<script src="/css/bootstrap/popper.min.js"></script>
+<script src="/css/bootstrap/bootstrap.min.js"></script>
+<script>
+
+	function startLoader(){
+		document.getElementById("loader").style.display = "flex";
+		document.getElementById("pageContent").style.display = "none";
+	}
+
+	function stopLoader(){
+		document.getElementById("loader").style.display = "none";
+		document.getElementById("pageContent").style.display = "block";
+	}
+
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+</body>
+</html>
