@@ -4,7 +4,9 @@
   "description": "Check plagiarism in texts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "npx nodemon index.js",
+    "format": "prettier --write **/*.{js,jsx,ts,tsx}"
   },
   "keywords": [
     "plagiarism",
@@ -20,5 +22,8 @@
     "express": "^4.17.1",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8"
+  },
+  "devDependencies": {
+    "prettier": "^2.4.1"
   }
 }
